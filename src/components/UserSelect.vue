@@ -24,9 +24,7 @@ onMounted(async () => {
             <ul v-else>
                 <span class="icon">
                     <i class="fas fa-spinner fa-pulse"></i>
-                    Loading users...
                 </span>
-                <p>Loading users...</p>
             </ul>
         </li>
     </ul>
