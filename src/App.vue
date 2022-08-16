@@ -1,28 +1,26 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
-</template>
-
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script lang="ts">
+import UserSelect from "./components/UserSelect.vue";
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    UserSelect
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<template>
+  <div id="app" class="section is-flex is-flex-direction-column">
+    <div class="container is-max-widescreen">
+      <div class="columns is-desktop">
+        <UserSelect class="column is-one-third"/>
+        <router-view class="column" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss">
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css";
+@import "../src/assets/fontawesome/fontawesome.min.css";
+@import "../src/assets/fontawesome/solid.min.css";
 </style>
