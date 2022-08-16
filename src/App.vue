@@ -10,8 +10,8 @@ export default {
 
 <template>
   <div id="app" class="section is-flex is-flex-direction-column">
-    <div class="container is-max-widescreen">
-      <div class="columns is-desktop">
+    <div class="container is--max-widescreen">
+      <div class="columns">
         <UserSelect class="column is-one-third"/>
         <router-view class="column" />
       </div>

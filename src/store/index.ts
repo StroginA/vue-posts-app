@@ -6,11 +6,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    users: [] as User[],
+    users: [] as User[]
   },
   getters: {
-    usernames (state) {
-      return state.users.map((user) => user.username)
+    users (state) {
+      return state.users
     }
   },
   mutations: {
@@ -19,11 +19,24 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async fetchUsers (context) {
-      const response = await fetch('https://jsonplaceholder.typicode.com/users');
-      const usersJson = await response.json();
-      context.commit('storeUsers', usersJson);
-      console.log('Users fetched');
+    fetchUsers (context) {
+      return new Promise<void>((resolve, reject) => {
+        fetch('https://jsonplaceholder.typicode.com/users/')
+        .then(res => {
+          if (res.ok) {
+            res.json()
+            .then(json => {
+              context.commit('storeUsers', json);
+              resolve();
+            })
+          } else {
+            throw new Error('Error loading users')
+          }
+        })
+        .catch(() => {
+          reject();
+        })
+      })
     }
   },
   modules: {
