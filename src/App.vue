@@ -1,20 +1,17 @@
-<script lang="ts">
-import UserSelect from "./components/UserSelect.vue";
+<script lang="ts" setup>
+import { onMounted } from "vue";
+import NavigationBar from "./components/NavigationBar.vue";
 
-export default {
-  components: {
-    UserSelect
-  }
-}
+onMounted(() => {
+  document.body.classList.add("has-navbar-fixed-top");
+})
 </script>
 
 <template>
-  <div id="app" class="section is-flex is-flex-direction-column">
-    <div class="container is--max-widescreen">
-      <div class="columns">
-        <UserSelect class="column is-one-third"/>
-        <router-view class="column" />
-      </div>
+  <div id="app" class="section">
+    <div class="container is-max-desktop">
+      <NavigationBar />
+      <router-view />
     </div>
   </div>
 </template>
