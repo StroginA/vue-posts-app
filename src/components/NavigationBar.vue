@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import store from '@/store';
 import { onMounted, ref } from 'vue';
+import router from '../router';
 
 const isLoadingUsers = ref(true);
 const isLoadingError = ref(false);
 const isBurgerMenuOpen = ref(false);
+
 
 onMounted(async () => {
     store.dispatch('fetchUsers')
@@ -20,12 +22,23 @@ onMounted(async () => {
 const handleNavbarBurgerClick = () => {
     isBurgerMenuOpen.value = !isBurgerMenuOpen.value;
 }
+
+const handleUserLinkClick = (id: number) => {
+    router.push({path:'/posts', query:{userId: `${id}`}});
+    console.log(router.currentRoute.fullPath)
+}
+
 </script>
 
 <template>
     <nav class="navbar is-fixed-top has-shadow" 
     role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
+            <!--
+                The burger button is automatically rendered
+                at lower screen width instead of the menu.
+                Spans are required for the Bulma implementation.
+            -->
             <a role="button" 
             class="navbar-burger"
             :class="`${isBurgerMenuOpen ? 'is-active' : ''}`"
@@ -50,18 +63,28 @@ const handleNavbarBurgerClick = () => {
                         Users
                     </a>
                     <div class="navbar-dropdown is-right">
+                        <!--
+                            If users are loaded, display, else
+                            display loading, else if error display error.
+                        -->
                         <ul v-if="!isLoadingUsers">
-                            <router-link class="navbar-item"
+                            <a class="navbar-item"
                             v-for="user in store.getters.users"
                             :key="user.id"
-                            to="/about">
+                            @click="handleUserLinkClick(user.id)">
                                 {{user.username}}
-                            </router-link>
+                            </a>
                         </ul>
+                        <!--
+                            Loading spinner
+                        -->
                         <span v-else-if="!isLoadingError"
                         class="icon">
                             <i class="fas fa-spinner fa-pulse"></i>
                         </span>
+                        <!--
+                            Error message
+                        -->
                         <p v-else class="has-text-danger">
                             Error loading users
                         </p>
@@ -71,6 +94,3 @@ const handleNavbarBurgerClick = () => {
         </div>
     </nav>
 </template>
-
-<style lang="scss">
-</style>

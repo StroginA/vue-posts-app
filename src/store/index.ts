@@ -11,10 +11,10 @@ export default new Vuex.Store({
     posts: [] as Post[]
   },
   getters: {
-    users (state) {
+    users (state): User[] {
       return state.users
     },
-    posts (state) {
+    posts (state): Post[] {
       return state.posts
     },
     author: (state) => (post: Post) => {
