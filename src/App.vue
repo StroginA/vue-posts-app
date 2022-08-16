@@ -1,9 +1,17 @@
 <script lang="ts" setup>
 import { onMounted } from "vue";
 import NavigationBar from "./components/NavigationBar.vue";
+import Vue from 'vue';
 
 onMounted(() => {
   document.body.classList.add("has-navbar-fixed-top");
+})
+</script>
+<script lang="ts">
+export default Vue.extend({
+  components: {
+    NavigationBar
+  }
 })
 </script>
 
@@ -11,7 +19,7 @@ onMounted(() => {
   <div id="app" class="section">
     <div class="container is-max-desktop">
       <NavigationBar />
-      <router-view />
+      <router-view :key="$route.fullPath"/>
     </div>
   </div>
 </template>

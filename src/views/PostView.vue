@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import store from '@/store';
 import router from '@/router';
 
 const isLoadingPosts = ref(true);
 const isLoadingError = ref(false);
-const routePath = ref(router.currentRoute.fullPath)
 
 onMounted(async () => {
     store.dispatch('fetchPosts', router.currentRoute.query.userId)
@@ -17,18 +16,6 @@ onMounted(async () => {
         isLoadingError.value = true;
     })
 });
-
-watch(routePath, () => {
-    isLoadingPosts.value = true;
-    store.dispatch('fetchPosts', router.currentRoute.query.userId)
-    .then(() => {
-        isLoadingPosts.value = false;
-    })
-    .catch(() => {
-        isLoadingPosts.value = false;
-        isLoadingError.value = true;
-    })
-})
 
 </script>
 

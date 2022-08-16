@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import store from '@/store';
 import { onMounted, ref } from 'vue';
-import router from '../router';
 
 const isLoadingUsers = ref(true);
 const isLoadingError = ref(false);
@@ -23,10 +22,6 @@ const handleNavbarBurgerClick = () => {
     isBurgerMenuOpen.value = !isBurgerMenuOpen.value;
 }
 
-const handleUserLinkClick = (id: number) => {
-    router.push({path:'/posts', query:{userId: `${id}`}});
-    console.log(router.currentRoute.fullPath)
-}
 
 </script>
 
@@ -68,12 +63,12 @@ const handleUserLinkClick = (id: number) => {
                             display loading, else if error display error.
                         -->
                         <ul v-if="!isLoadingUsers">
-                            <a class="navbar-item"
+                            <router-link class="navbar-item"
                             v-for="user in store.getters.users"
                             :key="user.id"
-                            @click="handleUserLinkClick(user.id)">
+                            :to="{path:'/posts', query:{userId: `${user.id}`}}">
                                 {{user.username}}
-                            </a>
+                            </router-link>
                         </ul>
                         <!--
                             Loading spinner
