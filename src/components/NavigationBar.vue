@@ -53,7 +53,8 @@ const handleNavbarBurgerClick = () => {
                 to="/">
                     Show all posts
                 </router-link>
-                <div class="navbar-item has-dropdown is-hoverable">
+                <div class="navbar-item has-dropdown is-hoverable"
+                tabindex="0">
                     <a class="navbar-link">
                         Users
                     </a>

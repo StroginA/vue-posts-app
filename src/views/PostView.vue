@@ -2,51 +2,38 @@
 import { onMounted, ref } from 'vue';
 import store from '@/store';
 import router from '@/router';
+import type { Post } from '@/types';
+import LoadingContent from '@/components/LoadingContent.vue';
 
-const isLoadingPosts = ref(true);
+const isLoadingPost = ref(true);
 const isLoadingError = ref(false);
+const postId = ref(router.currentRoute.params.id);
+const post: Post = ref(store.getters.post(postId.value))
 
 onMounted(async () => {
-    store.dispatch('fetchPosts', router.currentRoute.query.userId)
+    store.dispatch('fetchPostById', postId.value)
     .then(() => {
-        isLoadingPosts.value = false;
+        isLoadingPost.value = false;
     })
     .catch(() => {
-        isLoadingPosts.value = false;
+        isLoadingPost.value = false;
         isLoadingError.value = true;
     })
 });
 
 </script>
 
-<template>
-  <ul v-if="!isLoadingPosts && store.getters.posts.length !== 0">
-    <div class="card mb-4"
-    v-for="post in store.getters.posts"
-    :key="post.id"
-    to="/about">
-      <div class="card-content">
-        <div class="media">
-          <div class="media-content is-clipped">
-            <p class="title is-size-4">{{post.title}}</p>
-            <p class="subtitle is-size-6">
-              submitted by {{store.getters.author(post).username}}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ul>
-  <ul v-else>
-    <span v-if="!isLoadingError"
-    class="icon">
-      <i class="fas fa-spinner fa-pulse"></i>
-    </span>
-    <p v-else class="has-text-danger">
-      Error loading posts
-    </p>
-  </ul>
-</template>
 
-<style lang="scss" scoped>
-</style>
+<template>
+    <div class="media"
+    v-if="!isLoadingPost && post">
+        <div class="media-content">
+            <div class="content">
+                <h1 class="title">{{post.title}}</h1>
+                <p>{{post.body}}</p>
+            </div>
+        </div>
+    </div>
+    <LoadingContent v-else :is-loading-error="isLoadingError"
+    :error-message="'Error loading post'" />
+</template>

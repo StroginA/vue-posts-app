@@ -19,6 +19,9 @@ export default new Vuex.Store({
     },
     author: (state) => (post: Post) => {
       return state.users.find((user) => user.id === post.userId);
+    },
+    post: (state) => (id: number) => {
+      return state.posts.find(post => post.id === id);
     }
   },
   mutations: {
@@ -62,6 +65,26 @@ export default new Vuex.Store({
             })
           } else {
             throw new Error('Error loading posts')
+          }
+        })
+        .catch(() => {
+          reject();
+        })
+      })
+    },
+    fetchPostById (context, id) {
+      return new Promise<void>((resolve, reject) => {
+        fetch('https://jsonplaceholder.typicode.com/posts/' +
+        `${id}`)
+        .then(res => {
+          if (res.ok) {
+            res.json()
+            .then(json => {
+              context.commit('storePosts', [json]);
+              resolve();
+            })
+          } else {
+            throw new Error('Error loading post')
           }
         })
         .catch(() => {
