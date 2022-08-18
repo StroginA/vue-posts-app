@@ -32,3 +32,8 @@ export interface Comment {
     email: string;
     body: string;
 }
+
+export interface Popup {
+    message: string;
+    type: 'is-info' | 'is-danger'
+}

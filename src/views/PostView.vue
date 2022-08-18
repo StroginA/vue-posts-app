@@ -37,7 +37,7 @@ onMounted(async () => {
     });
 });
 
-const postComment = () => {
+const handlePostComment = () => {
       fetch('https://jsonplaceholder.typicode.com/comments', {
         method: 'POST',
         body: JSON.stringify({
@@ -60,7 +60,7 @@ const postComment = () => {
         }
       })
       .catch(() => {
-        
+
       })
 }     
 
@@ -150,7 +150,7 @@ const postComment = () => {
                         :disabled="commentEmail.length===0 ||
                         commentTitle.length===0 ||
                         commentBody.length===0"
-                        @click="postComment">Submit</button>
+                        @click="handlePostComment">Submit</button>
                     </div>
                 </div>
             </div>

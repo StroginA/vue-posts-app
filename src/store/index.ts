@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import type { Comment, Post, User } from '../types'
+import type { Comment, Post, User, Popup } from '../types'
 
 Vue.use(Vuex)
 
@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     users: [] as User[],
     posts: [] as Post[],
-    comments: [] as Comment[]
+    comments: [] as Comment[],
+    popups: [] as Popup[]
   },
   getters: {
     users (state): User[] {
@@ -25,6 +26,9 @@ export default new Vuex.Store({
     },
     post: (state) => (id: number) => {
       return state.posts.find(post => post.id === id);
+    },
+    popups (state): Popup[] {
+      return state.popups
     }
   },
   mutations: {

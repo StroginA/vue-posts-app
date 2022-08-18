@@ -2,7 +2,7 @@
 import { PropType, defineProps } from 'vue';
 
 
-const props = defineProps({
+defineProps({
     errorMessage: {
         type: String as PropType<string>,
         default: 'An error has occured'
@@ -16,12 +16,12 @@ const props = defineProps({
 
 <template>
     <div class="is-flex is-justify-content-center">
-        <span v-if="!props.isLoadingError"
+        <span v-if="!isLoadingError"
         class="icon is-size-1">
             <i class="fas fa-spinner fa-pulse"></i>
         </span>
         <p v-else class="has-text-danger is-size-4">
-            {{props.errorMessage}}
+            {{errorMessage}}
         </p>
     </div>
 </template>
