@@ -13,6 +13,11 @@ const postId = ref(router.currentRoute.params.id);
 const post: Ref<Post> = ref(store.getters.post(parseInt(postId.value)));
 const author: Ref<User> = ref(store.getters.author(post.value));
 
+// Submit comment form model
+const commentEmail: Ref<string> = ref("");
+const commentTitle: Ref<string> = ref("");
+const commentBody: Ref<string> = ref("");
+
 onMounted(async () => {
     store.dispatch('fetchPostById', postId.value)
     .then(() => {
@@ -31,6 +36,33 @@ onMounted(async () => {
         isLoadingCommentsError.value = true;
     });
 });
+
+const postComment = () => {
+      fetch('https://jsonplaceholder.typicode.com/comments', {
+        method: 'POST',
+        body: JSON.stringify({
+            postId: postId.value,
+            email: commentEmail.value,
+            name: commentTitle.value,
+            body: commentBody.value
+        }),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        }
+      })
+      .then(res => {
+        if (res.ok) {
+            console.log('Comment posted')
+            commentTitle.value = "";
+            commentBody.value = "";
+        } else {
+          throw new Error('Error loading comments')
+        }
+      })
+      .catch(() => {
+        
+      })
+}     
 
 </script>
 
@@ -79,7 +111,7 @@ onMounted(async () => {
                     v-for="comment in store.getters.comments"
                     :key="comment.id">
                         <div class="media-content">
-                            <p class="subtitle">{{comment.email}}</p>
+                            <p class="subtitle is-size-5">{{comment.email}}</p>
                             <strong>{{comment.name}}</strong>
                             <p class="comment-body">{{comment.body}}</p>
                         </div>
@@ -89,6 +121,39 @@ onMounted(async () => {
                 <LoadingContent v-else :is-loading-error="isLoadingCommentsError"
                 :error-message="'Error loading comments'" />
             </section>
+            <div class="tile is-child box">
+                <h1 class="title">Leave a comment...</h1>
+                <div class="field">
+                    <label class="label" for="commentEmail">Email</label>
+                    <div class="control">
+                        <input class="input" type="text" id="commentEmail"
+                        v-model="commentEmail"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="commentTitle">Title</label>
+                    <div class="control">
+                        <input class="input" type="text" id="commentTitle"
+                        v-model="commentTitle"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="commentBody">Comment text</label>
+                    <div class="control">
+                        <textarea class="textarea" id="commentBody"
+                        v-model="commentBody"></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary"
+                        :disabled="commentEmail.length===0 ||
+                        commentTitle.length===0 ||
+                        commentBody.length===0"
+                        @click="postComment">Submit</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <LoadingContent v-else :is-loading-error="isLoadingError"
