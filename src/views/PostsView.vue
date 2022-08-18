@@ -49,4 +49,9 @@ const handlePostCardClick = (id: string) => {
 </template>
 
 <style lang="scss" scoped>
+.card {
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
 </style>

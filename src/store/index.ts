@@ -1,14 +1,14 @@
 import Vue from 'vue'
-import { prototype } from 'vue/types/umd'
 import Vuex from 'vuex'
-import type { Post, User } from '../types'
+import type { Comment, Post, User } from '../types'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     users: [] as User[],
-    posts: [] as Post[]
+    posts: [] as Post[],
+    comments: [] as Comment[]
   },
   getters: {
     users (state): User[] {
@@ -16,6 +16,9 @@ export default new Vuex.Store({
     },
     posts (state): Post[] {
       return state.posts
+    },
+    comments (state): Comment[] {
+      return state.comments
     },
     author: (state) => (post: Post) => {
       return state.users.find((user) => user.id === post.userId);
@@ -30,6 +33,9 @@ export default new Vuex.Store({
     },
     storePosts (state, posts) {
       state.posts = posts;
+    },
+    storeComments (state, comments) {
+      state.comments = comments;
     }
   },
   actions: {
@@ -85,6 +91,26 @@ export default new Vuex.Store({
             })
           } else {
             throw new Error('Error loading post')
+          }
+        })
+        .catch(() => {
+          reject();
+        })
+      })
+    },
+    fetchCommentsByPostId (context, id) {
+      return new Promise<void>((resolve, reject) => {
+        fetch('https://jsonplaceholder.typicode.com/comments?postId=' +
+        `${id}`)
+        .then(res => {
+          if (res.ok) {
+            res.json()
+            .then(json => {
+              context.commit('storeComments', json);
+              resolve();
+            })
+          } else {
+            throw new Error('Error loading comments')
           }
         })
         .catch(() => {

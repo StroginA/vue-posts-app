@@ -1,14 +1,17 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 import store from '@/store';
 import router from '@/router';
-import type { Post } from '@/types';
+import type { Post, User } from '@/types';
 import LoadingContent from '@/components/LoadingContent.vue';
 
 const isLoadingPost = ref(true);
 const isLoadingError = ref(false);
+const isLoadingComments = ref(true);
+const isLoadingCommentsError = ref(false);
 const postId = ref(router.currentRoute.params.id);
-const post: Post = ref(store.getters.post(postId.value))
+const post: Ref<Post> = ref(store.getters.post(parseInt(postId.value)));
+const author: Ref<User> = ref(store.getters.author(post.value));
 
 onMounted(async () => {
     store.dispatch('fetchPostById', postId.value)
@@ -18,22 +21,93 @@ onMounted(async () => {
     .catch(() => {
         isLoadingPost.value = false;
         isLoadingError.value = true;
+    });
+    store.dispatch('fetchCommentsByPostId', postId.value)
+    .then(() => {
+        isLoadingComments.value = false;
     })
+    .catch(() => {
+        isLoadingComments.value = false;
+        isLoadingCommentsError.value = true;
+    });
 });
 
 </script>
 
 
 <template>
-    <div class="media"
+    <div class="tile is-ancestor"
     v-if="!isLoadingPost && post">
-        <div class="media-content">
-            <div class="content">
+        <div class="tile is-parent is-vertical is-4">
+            <aside class="tile is-child box"
+            v-if="!isLoadingPost && author">
+                <h1 class="title">Author</h1>
+                <p class="subtitle">{{author.username}}</p>
+                <div class="is-size-6 author-info">
+                    <strong>Name:</strong>
+                    <p>{{author.name}}</p>
+                    <strong>Email:</strong>
+                    <p>{{author.email}}</p>
+                    <strong>Phone:</strong>
+                    <p>{{author.phone}}</p>
+                    <strong>Company:</strong>
+                    <div>
+                        <p>{{author.company.name}}</p>
+                        <p class="is-size-7">{{author.company.catchPhrase}}</p>
+                        <p class="is-size-7">{{author.company.bs}}</p>
+                    </div>
+                    <strong>Website:</strong>
+                    <p>{{author.website}}</p>
+                    <strong>Address:</strong><div>
+                        <p>{{author.address.zipcode}}</p>
+                        <p>{{author.address.city}}</p>
+                        <p>{{author.address.street}}</p>
+                        <p>{{author.address.suite}}</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+        <div class="tile is-parent is-vertical">
+            <section class="tile is-child box">
                 <h1 class="title">{{post.title}}</h1>
-                <p>{{post.body}}</p>
-            </div>
+                <article class="post-body">{{post.body}}</article>
+            </section>
+            <section class="tile is-child box">
+                <h1 class="title">Comments</h1>
+                <ul v-if="!isLoadingComments && store.getters.comments.length !== 0">
+                    <content class="media"
+                    v-for="comment in store.getters.comments"
+                    :key="comment.id">
+                        <div class="media-content">
+                            <p class="subtitle">{{comment.email}}</p>
+                            <strong>{{comment.name}}</strong>
+                            <p class="comment-body">{{comment.body}}</p>
+                        </div>
+
+                    </content>
+                </ul>
+                <LoadingContent v-else :is-loading-error="isLoadingCommentsError"
+                :error-message="'Error loading comments'" />
+            </section>
         </div>
     </div>
     <LoadingContent v-else :is-loading-error="isLoadingError"
     :error-message="'Error loading post'" />
 </template>
+
+<style lang="scss">
+.post-body {
+    // Preserve whitespace in the post body
+    white-space: pre;
+}
+.comment-body {
+    white-space: pre;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+.author-info {
+    &>* {
+        margin-bottom: 1rem;
+    }
+}
+</style>
