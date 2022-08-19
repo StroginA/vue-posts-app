@@ -38,7 +38,7 @@ onMounted(async () => {
 });
 
 const handlePostComment = () => {
-      fetch('https://jsonplaceholder.typicode.com/comments', {
+    fetch('https://jsonplaceholder.typicode.com/comments', {
         method: 'POST',
         body: JSON.stringify({
             postId: postId.value,
@@ -49,19 +49,25 @@ const handlePostComment = () => {
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         }
-      })
-      .then(res => {
+    })
+    .then(res => {
         if (res.ok) {
-            console.log('Comment posted')
+            store.dispatch('createPopup', {
+                message: 'Comment created!',
+                color: 'is-info'
+            })
             commentTitle.value = "";
             commentBody.value = "";
         } else {
           throw new Error('Error loading comments')
         }
-      })
-      .catch(() => {
-
-      })
+    })
+    .catch(() => {
+        store.dispatch('createPopup', {
+            message: 'Could not create comment',
+            color: 'is-danger'
+        })
+    })
 }     
 
 </script>

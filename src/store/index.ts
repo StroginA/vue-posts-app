@@ -21,6 +21,9 @@ export default new Vuex.Store({
     comments (state): Comment[] {
       return state.comments
     },
+    user: (state) => (id: number) => {
+      return state.users.find(user => user.id === id);
+    },
     author: (state) => (post: Post) => {
       return state.users.find((user) => user.id === post.userId);
     },
@@ -32,14 +35,23 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    storeUsers (state, users) {
+    storeUsers (state, users: User[]) {
       state.users = users;
     },
-    storePosts (state, posts) {
+    storePosts (state, posts: Post[]) {
       state.posts = posts;
     },
-    storeComments (state, comments) {
+    storeComments (state, comments: Comment[]) {
       state.comments = comments;
+    },
+    deletePopup (state, id: number) {
+      state.popups = [...state.popups.slice(0, id), ...state.popups.slice(id+1)];
+    },
+    createPopup (state, popup: Popup) {
+      // A maximum of 4 popups
+      state.popups = state.popups.length > 3 ?
+      [...state.popups.slice(1), popup] :
+      [...state.popups, popup] ;
     }
   },
   actions: {
@@ -121,6 +133,12 @@ export default new Vuex.Store({
           reject();
         })
       })
+    },
+    deletePopup (context, id) {
+      context.commit('deletePopup', id);
+    },
+    createPopup (context, {message, color}: Popup) {
+      context.commit('createPopup', {message: message, color: color})
     }
   },
   modules: {

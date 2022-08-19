@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import NavigationBar from "./components/NavigationBar.vue";
 import Vue from 'vue';
 import AppPopup from "./components/AppPopup.vue";
+import store from '@/store';
 
 onMounted(() => {
   document.body.classList.add("has-navbar-fixed-top");
@@ -20,10 +21,22 @@ export default Vue.extend({
   <div id="app" class="section">
     <div class="container is-max-desktop">
       <NavigationBar />
+      <!--
+        :key is for resetting the view when navigating to
+        a subroute of the same route (such as a query)
+      -->
       <router-view :key="$route.fullPath"/>
     </div>
-    <AppPopup :message="'Sample popup'" :color="'is-info'" 
-    class="popup-block"/>
+    <div class="popup-block">
+      <!--
+        Popup notifications in the corner of the screen
+      -->
+      <AppPopup v-for="popup in store.getters.popups"
+      :message="popup.message" 
+      :color="popup.color"
+      :id="store.getters.popups.indexOf(popup)"
+      :key="store.getters.popups.indexOf(popup)" />
+    </div>
   </div>
 </template>
 
@@ -35,6 +48,7 @@ export default Vue.extend({
   position: fixed;
   right: 1rem;
   bottom: 1rem;
-  max-width: 30rem;
+  width: 20rem;
+  filter: opacity(0.7);
 }
 </style>

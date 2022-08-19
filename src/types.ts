@@ -33,7 +33,9 @@ export interface Comment {
     body: string;
 }
 
+export type PopupColor = 'is-info' | 'is-danger';
+
 export interface Popup {
     message: string;
-    type: 'is-info' | 'is-danger'
+    color: PopupColor;
 }

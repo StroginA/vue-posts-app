@@ -15,8 +15,9 @@ onMounted(async () => {
     .catch(() => {
         isLoadingPosts.value = false;
         isLoadingError.value = true;
-    })
+    });
 });
+
 
 const handlePostCardClick = (id: string) => {
   router.push({name: 'post', params: {id: id}})
