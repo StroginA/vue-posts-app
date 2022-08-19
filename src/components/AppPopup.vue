@@ -5,6 +5,7 @@ import { PopupColor } from '@/types';
 
 
 const props = defineProps({
+    // matches id in the store array
     id: {
         type: Number as PropType<number>,
         default: -1

@@ -19,6 +19,10 @@ export default Vue.extend({
 
 <template>
   <div id="app" class="section">
+    <!--
+      Narrower viewpoint for wide screens so content is not stretched
+      too much
+    -->
     <div class="container is-max-desktop">
       <NavigationBar />
       <!--

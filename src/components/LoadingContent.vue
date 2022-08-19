@@ -15,6 +15,9 @@ const props = defineProps({
 </script>
 
 <template>
+    <!--
+        Generic "loading" component
+    -->
     <div class="is-flex is-justify-content-center">
         <span v-if="!props.isLoadingError"
         class="icon is-size-1">

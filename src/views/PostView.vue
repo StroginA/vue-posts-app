@@ -77,6 +77,9 @@ const handlePostComment = () => {
     <div class="tile is-ancestor"
     v-if="!isLoadingPost && post">
         <div class="tile is-parent is-vertical is-4">
+            <!--
+                Author info box
+            -->
             <aside class="tile is-child box"
             v-if="!isLoadingPost && author">
                 <h1 class="title">Author</h1>
@@ -106,10 +109,16 @@ const handlePostComment = () => {
             </aside>
         </div>
         <div class="tile is-parent is-vertical">
+            <!--
+                Post body
+            -->
             <section class="tile is-child box">
                 <h1 class="title">{{post.title}}</h1>
                 <article class="post-body">{{post.body}}</article>
             </section>
+            <!--
+                Comment section
+            -->
             <section class="tile is-child box">
                 <h1 class="title">Comments</h1>
                 <ul v-if="!isLoadingComments && store.getters.comments.length !== 0">
@@ -127,6 +136,9 @@ const handlePostComment = () => {
                 <LoadingContent v-else :is-loading-error="isLoadingCommentsError"
                 :error-message="'Error loading comments'" />
             </section>
+            <!--
+                Comment form
+            -->
             <div class="tile is-child box">
                 <h1 class="title">Leave a comment...</h1>
                 <div class="field">
@@ -152,6 +164,10 @@ const handlePostComment = () => {
                 </div>
                 <div class="field">
                     <div class="control">
+                        <!--
+                            Active if all fields are filled
+                            (currently no email verification)
+                        -->
                         <button class="button is-primary"
                         :disabled="commentEmail.length===0 ||
                         commentTitle.length===0 ||
